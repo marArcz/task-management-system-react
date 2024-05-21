@@ -17,10 +17,14 @@ function useAuth() {
             })
                 .catch(err => err);
         },
-        async logout(token) {
+        async logout() {
             return await axios.post('/auth/login', {}, {
-                headers: { Authorization: `Bearer ${token}` }
-            }).then(res => res)
+                headers: { Authorization: `Bearer ${localStorage.getItem('user_token')}` }
+            }).then(res => {
+                setAuthenticated(false)
+                localStorage.removeItem('user_token');
+                return res;
+            })
                 .catch(err => err);
         },
         async getAccount(token) {

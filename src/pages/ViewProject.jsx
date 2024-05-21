@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../Layout'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Container } from '../Components/Container'
 import axios from 'axios'
 import { headerTokenConfig } from '../Helpers'
@@ -8,7 +8,8 @@ import { headerTokenConfig } from '../Helpers'
 export const ViewProject = () => {
     const { id } = useParams()
     const [project, setProject] = useState(null)
-
+    const [processing, setProcessing] = useState(false);
+    const navigate = useNavigate();
     useEffect(() => {
         axios.get(`/projects/${id}`, headerTokenConfig)
             .then((res) => {
@@ -19,7 +20,12 @@ export const ViewProject = () => {
     }, []);
 
     const onDelete = () => {
-        
+        setProcessing(true)
+        axios.delete(`/projects/${id}`,headerTokenConfig)
+        .then(res => {
+            setProcessing(false)
+            navigate('/dashboard');
+        })
     }
 
     return (
@@ -36,7 +42,7 @@ export const ViewProject = () => {
                                 <div className="text-end">
                                     <div className="flex justify-end gap-2">
                                         <Link className='btn btn-sm btn-success'>Edit</Link>
-                                        <Link className='btn btn-sm btn-danger'>Delete</Link>
+                                        <button onClick={onDelete} className='btn btn-sm btn-danger'>Delete</button>
                                     </div>
                                 </div>
                                 <div className="card border-0 shadow-sm mt-4">

@@ -3,15 +3,22 @@ import ApplicationLogo from './Components/ApplicationLogo';
 import Dropdown from './Components/Dropdown';
 import NavLink from './Components/NavLink';
 import ResponsiveNavLink from './Components/ResponsiveNavLink';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from './AuthStore';
+import useAuth from './useAuth';
 
 function Layout({ header, children, session = null }) {
   const { user } = useAuthStore();
-
+  const { logout } = useAuth();
+  const navigate = useNavigate()
   const location = useLocation();
 
   const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  }
 
   return (
     <>
@@ -32,9 +39,6 @@ function Layout({ header, children, session = null }) {
                   </NavLink>
                   <NavLink to="/teams" active={location.pathname == '/teams'}>
                     Teams
-                  </NavLink>
-                  <NavLink to="/projects" active={location.pathname == '/projects'}>
-                    Projects
                   </NavLink>
                 </div>
               </div>
@@ -68,7 +72,7 @@ function Layout({ header, children, session = null }) {
 
                     <Dropdown.Content>
                       <Dropdown.Link href='/profile'>Profile</Dropdown.Link>
-                      <Dropdown.Link as="button">
+                      <Dropdown.Link href="#" as="button" onClick={handleLogout}>
                         Log Out
                       </Dropdown.Link>
                     </Dropdown.Content>

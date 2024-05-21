@@ -15,14 +15,22 @@ export const Dashboard = () => {
 
 
     useEffect(() => {
-     
-
         if (user && user.team) {
             setTasks(user.tasks)
-            setProjects(user.team?.projects)
+
+
         }
 
     }, [user])
+
+    useEffect(() => {
+        if (user && user.team) {
+            axios.get(`/team/${user?.team?.id}/projects`,headerTokenConfig)
+                .then((res) => {
+                    setProjects(res.data);
+                })
+        }
+    }, [])
 
     return (
         <>
