@@ -17,8 +17,6 @@ export const Dashboard = () => {
     useEffect(() => {
         if (user && user.team) {
             setTasks(user.tasks)
-
-
         }
 
     }, [user])

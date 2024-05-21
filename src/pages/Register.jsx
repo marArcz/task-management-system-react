@@ -6,6 +6,8 @@ import InputError from '../Components/InputError';
 import InputLabel from '../Components/InputLabel';
 import PrimaryButton from '../Components/PrimaryButton';
 import TextInput from '../Components/TextInput';
+import { Link, useNavigate } from 'react-router-dom';
+import useAuth from '../useAuth';
 
 export const Register = () => {
 
@@ -18,34 +20,45 @@ export const Register = () => {
     const [processing, setProcessing] = useState(false)
     const [token, setToken] = useState('')
     const [loginError, setLoginError] = useState(null)
+    const navigate = useNavigate();
+
+    const { register } = useAuth()
 
     const submit = (e) => {
         e.preventDefault();
         setProcessing(true);
         setLoginError(null)
-        axios.post('/auth/login', {
-            email, username, password
-        })
-            .then((res) => {
-                setProcessing(false)
-                setToken(res.data.access_token)
-                localStorage.setItem('user_token', res.data.access_token)
-            })
-            .catch((err) => {
-                setProcessing(false)
+        if (password == confirmPassword) {
+            register(
+                name, username, email, password, confirmPassword
+            )
+                .then((res) => {
+                    setProcessing(false)
+                    setToken(res.data.access_token)
+                    localStorage.setItem('user_token', res.data.access_token)
 
-                setLoginError(err.response.data.message)
-            })
+                    navigate('/dashboard');
+
+                })
+                .catch((err) => {
+                    setProcessing(false)
+                    console.error(err)
+                    // setLoginError(err.response.data.message)
+                })
+        }else{
+            setProcessing(false)
+            setLoginError("Passwords does not match!")
+        }
     }
 
     return (
         <Guest processing={processing}>
-            <p className="fw-bold fs-5">Login Here</p>
+            <p className="fw-bold fs-5">Sign up Here</p>
             {loginError && (
                 <p className='text-danger mb-3'>{loginError}</p>
             )}
-            <form onSubmit={submit}>
-                <div>
+            <form className='mt-3' onSubmit={submit}>
+                <div className='mb-3'>
                     <InputLabel htmlFor="name" value="Name" />
 
                     <TextInput
@@ -53,6 +66,7 @@ export const Register = () => {
                         type="text"
                         name="name"
                         value={name}
+                        required
                         className="mt-1 block w-full"
                         isFocused={true}
                         onChange={(e) => setName(e.target.value)}
@@ -60,7 +74,7 @@ export const Register = () => {
 
                     <InputError message={errors.name} className="mt-2" />
                 </div>
-                <div>
+                <div className='mb-3'>
                     <InputLabel htmlFor="username" value="Username" />
 
                     <TextInput
@@ -68,9 +82,10 @@ export const Register = () => {
                         type="text"
                         name="username"
                         value={username}
+                        required
                         className="mt-1 block w-full"
                         isFocused={true}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
 
                     <InputError message={errors.username} className="mt-2" />
@@ -84,6 +99,7 @@ export const Register = () => {
                         value={email}
                         className="mt-1 block w-full"
                         autoComplete="username"
+                        required
                         isFocused={true}
                         onChange={(e) => setEmail(e.target.value)}
                     />
@@ -98,6 +114,7 @@ export const Register = () => {
                         id="password"
                         type="password"
                         name="password"
+                        required
                         value={password}
                         className="mt-1 block w-full"
                         autoComplete="current-password"
@@ -107,21 +124,37 @@ export const Register = () => {
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
+                <div className="mt-4">
+                    <InputLabel htmlFor="password" value="Confirm password" />
+
+                    <TextInput
+                        id="confirmPassword"
+                        required
+                        type="password"
+                        name="confirmPassword"
+                        value={confirmPassword}
+                        className="mt-1 block w-full"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+
+                    <InputError message={errors.password} className="mt-2" />
+                </div>
+
                 <div className="flex items-center justify-end mt-4">
 
                     <PrimaryButton className="ms-4" disabled={false}>
-                        Log in
+                        Register
                     </PrimaryButton>
                 </div>
             </form>
             <p className="py-5 text-center text-sm text-secondary">Or</p>
             <div className="text-center">
-                <a
-                    href="/register"
+                <Link
+                    to="/"
                     className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                    Create an account here!
-                </a>
+                    Already have an account?
+                </Link>
             </div>
         </Guest>
     )

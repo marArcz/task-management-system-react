@@ -8,7 +8,7 @@ import PrimaryButton from '../Components/PrimaryButton';
 import TextInput from '../Components/TextInput';
 import { useAuthStore } from '../AuthStore';
 import { headerTokenConfig } from '../Helpers';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth, { AuthProvider } from '../useAuth';
 
 export const Login = () => {
@@ -22,7 +22,7 @@ export const Login = () => {
     const [loginError, setLoginError] = useState(null)
 
     const { login } = useAuth()
-    
+
     const { user, setUser } = useAuthStore();
 
     const submit = (e) => {
@@ -101,12 +101,12 @@ export const Login = () => {
             </form>
             <p className="py-5 text-center text-sm text-secondary">Or</p>
             <div className="text-center">
-                <a
-                    href="/register"
+                <Link 
+                    to="/register"
                     className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                     Create an account here!
-                </a>
+                </Link>
             </div>
         </Guest>
     )

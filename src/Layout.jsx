@@ -71,7 +71,6 @@ function Layout({ header, children, session = null }) {
                     </Dropdown.Trigger>
 
                     <Dropdown.Content>
-                      <Dropdown.Link href='/profile'>Profile</Dropdown.Link>
                       <Dropdown.Link href="#" as="button" onClick={handleLogout}>
                         Log Out
                       </Dropdown.Link>

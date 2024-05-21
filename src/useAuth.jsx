@@ -17,6 +17,15 @@ function useAuth() {
             })
                 .catch(err => err);
         },
+        async register(name,username,email, password,password_confirmation) {
+            return await axios.post('/auth/register', {
+                name,username,email, password,password_confirmation
+            }).then(res => {
+                setAuthenticated(true)
+                return res;
+            })
+                .catch(err => err);
+        },
         async logout() {
             return await axios.post('/auth/login', {}, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('user_token')}` }
