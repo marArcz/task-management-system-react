@@ -1,7 +1,8 @@
 import { Navigate } from "react-router-dom";
+import useAuth from '../useAuth';
 
 export function RequireAuth({ children }) {
-    const { authed } = useAuth();
+    const { authenticated } = useAuth();
 
-    return authed === true ? children : <Navigate to="/" replace />;
+    return authenticated ? children : <Navigate to="/" replace />;
 }

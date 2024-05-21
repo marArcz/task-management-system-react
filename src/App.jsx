@@ -20,30 +20,32 @@ import AddTeamMember from './pages/AddTeamMember'
 import { EditTeam } from './pages/EditTeam'
 import { CreateTeamProject } from './pages/CreateTeamProject'
 import { ViewProject } from './pages/ViewProject'
+import { AuthProvider } from './useAuth'
+import { RequireAuth } from './RequireAuth'
 
 function App() {
   const location = useLocation();
-  const { user,setUser } = useAuthStore();
-  const {processing, setProcessing} = useProcessingState();
+  const { user, setUser } = useAuthStore();
+  const { processing, setProcessing } = useProcessingState();
   const navigate = useNavigate();
 
   // check if user is authenticated
   useEffect(() => {
     if (user == null) {
-        if(localStorage.getItem('user_token') != null){
-          setProcessing(true)
-          axios.get('/auth/me',headerTokenConfig)
+      if (localStorage.getItem('user_token') != null) {
+        setProcessing(true)
+        axios.get('/auth/me', headerTokenConfig)
           .then(res => {
             setProcessing(false)
-              setUser(res.data)
-              console.log('me:',res.data)
+            setUser(res.data)
+            console.log('me:', res.data)
           })
           .catch(err => {
             setProcessing(false)
             navigate('/');
           })
-        }
-    }else{
+      }
+    } else {
       setProcessing(false)
     }
   }, [])
@@ -52,19 +54,21 @@ function App() {
 
   return (
     <>
-      <PageLoader show={processing}/>
-      <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/teams' element={<Teams />} />
-        <Route path='/teams/:id' element={<EditTeam/>} />
-        <Route path='/teams/:id/members' element={<TeamMembers />} />
-        <Route path='/teams/:id/members/create' element={<AddTeamMember />} />
-        <Route path='/teams/create' element={<CreateTeam />} />
-        <Route path='/teams/:id/projects/create' element={<CreateTeamProject />} />
-        <Route path='/projects/:id' element={<ViewProject/>} />
-      </Routes>
+      <AuthProvider>
+        <PageLoader show={processing} />
+        <Routes>
+          <Route path='/' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/dashboard' element={<RequireAuth><Dashboard /></RequireAuth>} />
+          <Route path='/teams' element={<Teams />} />
+          <Route path='/teams/:id' element={<EditTeam />} />
+          <Route path='/teams/:id/members' element={<TeamMembers />} />
+          <Route path='/teams/:id/members/create' element={<AddTeamMember />} />
+          <Route path='/teams/create' element={<CreateTeam />} />
+          <Route path='/teams/:id/projects/create' element={<CreateTeamProject />} />
+          <Route path='/projects/:id' element={<ViewProject />} />
+        </Routes>
+      </AuthProvider>
     </>
   )
 }

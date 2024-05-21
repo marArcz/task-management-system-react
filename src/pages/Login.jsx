@@ -9,7 +9,7 @@ import TextInput from '../Components/TextInput';
 import { useAuthStore } from '../AuthStore';
 import { headerTokenConfig } from '../Helpers';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../useAuth';
+import useAuth, { AuthProvider } from '../useAuth';
 
 export const Login = () => {
     const nav = useNavigate();
@@ -21,7 +21,7 @@ export const Login = () => {
     const [token, setToken] = useState('')
     const [loginError, setLoginError] = useState(null)
 
-    const { login } = useAuth
+    const { login } = useAuth()
 
     const { user, setUser } = useAuthStore();
 
