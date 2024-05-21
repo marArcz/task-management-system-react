@@ -135,7 +135,6 @@ function Layout({ header, children, session = null }) {
         )}
 
         <main>
-
           {children}
         </main>
       </div>

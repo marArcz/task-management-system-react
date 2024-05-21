@@ -47,8 +47,8 @@ export const Login = () => {
             })
             .catch((err) => {
                 setProcessing(false)
-
-                setLoginError(err.response.data.message)
+                console.log('error:', err)
+                // setLoginError(err.response.data.message)
             })
     }
 

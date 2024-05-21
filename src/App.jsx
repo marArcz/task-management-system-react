@@ -37,7 +37,6 @@ function App() {
 
   // check if user is authenticated
   useEffect(() => {
-    if (user == null) {
       if (localStorage.getItem("user_token") != null) {
         setProcessing(true);
         axios
@@ -49,12 +48,11 @@ function App() {
           })
           .catch((err) => {
             setProcessing(false);
-            navigate("/");
+            // navigate("/");
+            console.log(err)
           });
       }
-    } else {
-      setProcessing(false);
-    }
+   
   }, []);
 
   return (

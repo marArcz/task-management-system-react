@@ -8,11 +8,10 @@ import { Link } from 'react-router-dom'
 import { headerTokenConfig } from '../Helpers'
 
 export const Dashboard = () => {
-    const { user } = useAuthStore();
     const [fetching, setFetching] = useState(true)
     const [tasks, setTasks] = useState([])
     const [projects, setProjects] = useState([])
-
+    const [user, setUser] = useState(null)
 
     useEffect(() => {
         if (user && user.team) {
@@ -22,12 +21,22 @@ export const Dashboard = () => {
     }, [user])
 
     useEffect(() => {
-        if (user && user.team) {
-            axios.get(`/team/${user?.team?.id}/projects`,headerTokenConfig)
-                .then((res) => {
-                    setProjects(res.data);
-                })
-        }
+        axios.get('/auth/me',headerTokenConfig)
+            .then(res => {
+                setUser(res.data)
+
+                if (res.data.team) {
+                    axios.get(`/team/${user?.team?.id}/projects`, headerTokenConfig)
+                        .then((res) => {
+                            setProjects(res.data);
+                        })
+
+                    axios.get(`/teams/${user?.team?.id}`, headerTokenConfig)
+                        .then(res => {
+                            setProjects(r)
+                        })
+                }
+            })
     }, [])
 
     return (
@@ -49,9 +58,9 @@ export const Dashboard = () => {
                         <div className="card-body">
                             {
                                 !user ? (
-                                    <p class="placeholder-wave">
-                                        <span class="placeholder col-3"></span>
-                                    </p>
+                                    <div>
+                                        <div className="spinner-border spinner-border-sm text-primary"></div>
+                                    </div>
                                 ) : (
                                     <>
                                         {
